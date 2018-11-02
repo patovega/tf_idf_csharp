@@ -1,0 +1,7 @@
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\bin\Debug\TF-IDF-L2.exe.config
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\bin\Debug\TF-IDF-L2.exe
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\bin\Debug\TF-IDF-L2.pdb
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\obj\Debug\TF-IDF-L2.csprojAssemblyReference.cache
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\obj\Debug\TF-IDF-L2.csproj.CoreCompileInputs.cache
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\obj\Debug\TF-IDF-L2.exe
+C:\Users\patricio\source\repos\TF-IDF-L2\TF-IDF-L2\TF-IDF-L2\obj\Debug\TF-IDF-L2.pdb
