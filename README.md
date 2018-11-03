@@ -8,7 +8,7 @@ Existen librerias que entregan este calculo ya hecho, como por ejemplo SCIKIT-LE
 
 # TF-IDF
 
-"Tf-idf (del inglés Term frequency – Inverse document frequency), frecuencia de término – frecuencia inversa de documento (o sea, la frecuencia de ocurrencia del término en la colección de documentos), es una medida numérica que expresa cuán relevante es una palabra para un documento en una colección." <a href="https://es.wikipedia.org/wiki/Tf-idf" target="blank_">Wikipedia</>
+"Tf-idf (del inglés Term frequency – Inverse document frequency), frecuencia de término – frecuencia inversa de documento (o sea, la frecuencia de ocurrencia del término en la colección de documentos), es una medida numérica que expresa cuán relevante es una palabra para un documento en una colección." <a href="https://es.wikipedia.org/wiki/Tf-idf" target="blank_">Wikipedia</a>
 
 # About this project
 
