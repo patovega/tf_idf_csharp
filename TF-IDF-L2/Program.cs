@@ -15,36 +15,36 @@ namespace TF_IDF_L2
 
         static void Main(string[] args)
         {
-            List<List<string>> stemmedDocs;
-       
+            List<List<string>> docsDetails;
+            string[] documents;
 
-            List<string> bagOFwords = CreateVocabulary(out stemmedDocs);
-            Dictionary<string, double> tf = CalculateTermFrequency(bagOFwords, stemmedDocs);
-            double[][] tf_idf_vectors = TransformToTFIDFVectors(stemmedDocs, tf);
-            double[][] inputs = Normalize(tf_idf_vectors);
+            List<string> bagOFwords = CreateVocabulary(out docsDetails, out documents);
+            Dictionary<string, double> tf = CalculateTermFrequency(bagOFwords, docsDetails);
+            double[][] tf_idf_vectors = TransformToTFIDFVectors(docsDetails, tf);
+            double[][] tf_idf_normalized = Normalize(tf_idf_vectors);
 
 
-            string[] documents = ScantTxtFiles();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n \n TF IDF with L2 Norm \n");
+            Console.ResetColor();
 
-            for (int index = 0; index < inputs.Length; index++)
+
+            for (int index = 0; index < tf_idf_normalized.Length; index++)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(documents[index]);
+                Console.ResetColor();
 
                 int wordIndex = 0;
                 
-                foreach (double value in inputs[index])
+                foreach (double value in tf_idf_normalized[index])
                 {
-                  
-                   
-
-                    if (wordIndex < stemmedDocs[index].Count() )
+                    if (wordIndex < docsDetails[index].Count() )
                     {
-                        var wordDetail = stemmedDocs[index][wordIndex] + " = " + value;
-                        Console.WriteLine(wordDetail);
-                       
+                        PrintValues(docsDetails[index][wordIndex], value);
                     }
-                    wordIndex = wordIndex + 1;
 
+                    wordIndex = wordIndex + 1;
                 }
 
                 Console.WriteLine("\n");
@@ -53,31 +53,52 @@ namespace TF_IDF_L2
             Console.ReadKey();
         }
 
-        private static Dictionary<string,double> CalculateTermFrequency(List<string> BagOFwords, List<List<string>> stemmedDocs)
+        /// <summary>
+        /// Calculate TF IDF for each words inside the documents.
+        /// </summary>
+        /// <param name="BagOFwords">List<string> with all the words in all files</param>
+        /// <param name="documents">List<List<string>> with each file and his words.</param>
+        /// <returns></returns>
+        private static Dictionary<string,double> CalculateTermFrequency(List<string> BagOFwords, List<List<string>> documents)
         {
-            Console.WriteLine("Calculando TF " + DateTime.Now);
+         
             if (vocabularyIDF.Count == 0)
             {
                 var docIndex = 0;
   
                 foreach (var term in BagOFwords)
                 {
-                    double numberOfDocsContainingTerm = stemmedDocs.Where(d => d.Contains(term)).Count();
-                    vocabularyIDF[term] = Math.Log((double)stemmedDocs.Count / ((double)numberOfDocsContainingTerm));
+                    double numberOfDocsContainingTerm = documents.Where(d => d.Contains(term)).Count();
+                    vocabularyIDF[term] = Math.Log((double)documents.Count / ((double)numberOfDocsContainingTerm));
 
                     docIndex = docIndex + 1;
                 }
             }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n TF IDF NON NORMALIZE \n");
+            Console.ResetColor();
+
+            foreach (var v in vocabularyIDF)
+            {
+                PrintValues(v.Key, v.Value);
+            }
+
             return vocabularyIDF;
         }
 
-
-        private static double[][] TransformToTFIDFVectors(List<List<string>> stemmedDocs, Dictionary<string, double> vocabularyIDF)
+        /// <summary>
+        /// Transform words in vectors values
+        /// </summary>
+        /// <param name="documents">Documents with the content of them separete by words.</param>
+        /// <param name="vocabularyIDF">Dictionary with key = word and value = idf</param>
+        /// <returns>Double[][] represents the documents in vectors.</returns>
+        private static double[][] TransformToTFIDFVectors(List<List<string>> documents, Dictionary<string, double> vocabularyIDF)
         {
-            Console.WriteLine("Create TF vectors " + DateTime.Now);
-            //ada documento en un vector
+
             List<List<double>> vectors = new List<List<double>>();
-            foreach (var doc in stemmedDocs)
+
+            foreach (var doc in documents)
             {
                 List<double> vector = new List<double>();
 
@@ -91,11 +112,16 @@ namespace TF_IDF_L2
 
                 vectors.Add(vector);
             }
-            Console.WriteLine("Retornando VECTORES IDF " + DateTime.Now);
+
             return vectors.Select(v => v.ToArray()).ToArray();
         }
 
         
+        /// <summary>
+        /// Normalize the vectors with L2 norm.
+        /// </summary>
+        /// <param name="vectors">Represents a document how a vector.</param>
+        /// <returns>normalized vector.</returns>
         public static double[][] Normalize(double[][] vectors)
         {
 
@@ -109,7 +135,11 @@ namespace TF_IDF_L2
             return normalizedVectors.ToArray();
         }
 
-        //L2 NORM
+        /// <summary>
+        /// Apply L2 norm to vectors, norms are useful because they are used to express distances
+        /// </summary>
+        /// <param name="vector">Double[] vector</param>
+        /// <returns>Vector normalized</returns>
         public static double[] ApplyL2Norm(double[] vector)
         {
             List<double> result = new List<double>();
@@ -124,7 +154,6 @@ namespace TF_IDF_L2
 
             foreach (var value in vector)
             {
-                // Aplicamos norma L2
                 // L2-norm: Xi = Xi / Sqrt(X0^2 + X1^2 + .. + Xn^2)
                 result.Add(value / SqrtSumSquared);
             }
@@ -132,30 +161,38 @@ namespace TF_IDF_L2
             return result.ToArray();
         }
 
-
-        public static List<string> CreateVocabulary(out List<List<string>> stemmedDocs)
+        /// <summary>
+        /// Take documentes from dataset/ folder and analize each word of them.
+        /// </summary>
+        /// <param name="documents">Out, name of files and his content.</param>
+        /// <returns>List<string> vocabulary, includes words and frequency of each words from files. </returns>
+        public static List<string> CreateVocabulary(out List<List<string>> documents, out string[] files)
         {
             List<string> vocabulary = new List<string>();
             Dictionary<string, int> wordCountList = new Dictionary<string, int>();
-            stemmedDocs = new List<List<string>>();
-            
-            string[] files = ScantTxtFiles();
+            documents = new List<List<string>>();
+            files = new string[0];
+            files = ScantTxtFiles();
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             path = path + "/dataset/";
 
-            int docIndex = 0;
+
+            int docIndex = 1;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n Numbers of DOCS: " + files.Count() + " \n");
+            Console.ResetColor();
 
             foreach (var doc in files)
             {
-                List<string> stemmedDoc = new List<string>();
-
-                docIndex++;
+                List<string> document = new List<string>();
 
                 var content = File.ReadAllText(path + doc);
                 var wordPattern = new Regex(@"\w+");
 
                 List<string> words = new List<string>();
 
+                //use regex MATCH for take each word inside the document.
                 foreach (Match match in wordPattern.Matches(content.ToLower()))
                 {
                     // If word is a stop word its ignored for the TF IDF 
@@ -163,7 +200,6 @@ namespace TF_IDF_L2
                     {
                         continue;
                     }
-
 
                     string word = match.Value.ToLower();
                     words.Add(word);
@@ -177,23 +213,27 @@ namespace TF_IDF_L2
                         }
                         else
                         {
-                            wordCountList.Add(word, 0);
+                            wordCountList.Add(word, 1);
                         }
 
-                        stemmedDoc.Add(word);
+                        document.Add(word);
                     }
                 }
 
-                stemmedDocs.Add(stemmedDoc);
+                documents.Add(document);
+                docIndex++;
             }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n TF Term Frequency \n");
+            Console.ResetColor();
 
             foreach (var item in wordCountList)
             {
                 vocabulary.Add(item.Key);
+                PrintValues(item.Key, item.Value);
             }
 
-
-            Console.WriteLine("Retornando Vocabulary " + DateTime.Now);
             return vocabulary;
         }
 
@@ -219,6 +259,30 @@ namespace TF_IDF_L2
             }
 
             return docs;
+        }
+
+        /// <summary>
+        /// Print <key-values> of a dicctionary using console.colors
+        /// </summary>
+        /// <param name="key">string</param>
+        /// <param name="value">double</param>
+        private static void PrintValues(string key, double value)
+        {
+            Console.ResetColor();
+            Console.Write(" Word: ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(key);
+
+            Console.ResetColor();
+
+            Console.Write(" Value: ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(value);
+
+            Console.WriteLine("");
+            Console.ResetColor();
         }
 
     }
