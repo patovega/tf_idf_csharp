@@ -28,7 +28,6 @@ namespace TF_IDF_L2
             Console.WriteLine("\n \n TF IDF with L2 Norm \n");
             Console.ResetColor();
 
-
             for (int index = 0; index < tf_idf_normalized.Length; index++)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -147,7 +146,7 @@ namespace TF_IDF_L2
             double sumSquared = 0;
             foreach (var value in vector)
             {
-                sumSquared += value * value;
+                sumSquared +=  Math.Pow(value,2);
             }
 
             double SqrtSumSquared = Math.Sqrt(sumSquared);
