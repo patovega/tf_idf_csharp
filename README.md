@@ -6,6 +6,8 @@ La motivación de este proyecto pasa por calcular manualmente el TF - IDF de un 
 
 Existen librerias que entregan este calculo ya hecho, como por ejemplo SCIKIT-LEARN, que es una libreria para el uso Machine Learning con Python, en el siguiente repositorio: <a href="https://github.com/patovega/tf_idf_cosine_similarities" target="blank_">TF IDF Cosine similarities</a> la utilizo para el calculo del TF IDF y la similutd de coseno para encontrar documentos similiares entre diferentes documentos.
 
+Este proyecto tiene como base el siguiente proyecto: <a href="http://www.primaryobjects.com/2013/09/13/tf-idf-in-c-net-for-machine-learning-term-frequency-inverse-document-frequency/" target="blank_">TF IDF IN DOT NET FOR Machine Learning.</a>
+
 # TF-IDF
 
 "Tf-idf (del inglés Term frequency – Inverse document frequency), frecuencia de término – frecuencia inversa de documento (o sea, la frecuencia de ocurrencia del término en la colección de documentos), es una medida numérica que expresa cuán relevante es una palabra para un documento en una colección." <a href="https://es.wikipedia.org/wiki/Tf-idf" target="blank_">Wikipedia</a>
